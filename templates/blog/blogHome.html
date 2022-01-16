@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %} BlogHome {% endblock title %}
+ 
+    {% block js %}
+      <script>
+      let previews=document.getElementsByClassName('preview');
+      Array.from(previews).forEach((element)=>{
+          element.innerHTML=element.innerText;
+      });
+      </script>
+      {% endblock js %}
+      
+{% block blogactive %} active {% endblock blogactive %} 
+
+
+{% block body %}
+
+<style>
+    body{
+        /* padding-left: 100px;
+        background-color: black; */
+        background-image: url("https://images.pexels.com/photos/1030947/pexels-photo-1030947.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+            background-size: cover;
+            width: 100vw;
+            /* height: 100vw; */
+            /* padding-bottom: 40px; */
+    }
+
+    .container{
+        background-color: white;
+    }
+</style>
+
+<div class="container my-3">
+    <h2>Recipes by {{user.username}} ({{ page_obj.paginator.count }})</h2>
+    <div class="alert alert-warning bg-light p-3 m-2 d-md-flex justify-content-md-end">
+        <a href="{% url 'home:home' %}"  class="btn btn-outline-success mr-4 rounded-pill"  role="button">View All Posts</a>
+        <a href="{% url 'recipe:new_recipe' %}" class="btn btn-outline-success mr-4 rounded-pill"  role="button">Upload More New Post</a>
+    </div>
+    {% if allPosts %}
+        {% for post in allPosts  %}
+            <div class="row no-gutters align-items-center border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 my-4 position-relative">
+                <div class="col-3 d-none d-lg-block p-3 align-items-center justify-content-center">
+                    {% if post.pic %}
+                        <img src="{{post.pic.url}}" class="img-thumbnail rounded-circle" style="height:180px;width:180px;" alt="img - {{post.author.username}}"> 
+                    {% endif %}
+              
+
+                    <!-- <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRySQWC0abJmDb6-ThxGNw0-7NtizbPveXdG6624agMbu98hLeDMJ84yyQQsf4AoZgThRg&usqp=CAU" style="height:180px;width:180px;" alt="" class="recipe_image"> -->
+                </div>
+            
+                <div class="col p-4 d-flex flex-column position-static">
+                    <strong class="d-inline-block mb-2 text-primary">Recipe  by {{post.author}} ({{post.views}})</strong>
+                    <h3 class="mb-0"><a class="text-dark"href="{% url 'recipe:recipePost' post.title %}">{{post.title}} </a> </h3>
+                    <div class="mb-1 text-muted">{{post.datetime}}</div>
+                    <p class="card-text mb-auto mt-3">{{post.content|safe |truncatechars:200}}</p>
+                    <div class="my-2">
+                        <a href="{% url 'recipe:recipePost' post.title %}" role="button" class="btn btn-primary">Continue reading</a>
+                    </div>
+                    
+                </div>
+                {% comment %} <div class="col-auto d-none d-lg-block">
+                    <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail">
+                        <title>Placeholder</title>
+                        <rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
+                    </svg>
+                </div> {% endcomment %}
+            </div>
+        {% endfor %}
+        <div class="mt-4">
+            {% if is_paginated %}
+                {% if page_obj.has_previous %}
+                    <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+                    <a class="btn btn-outline-info mb-4" href="?page={{page_obj.previous_page_number}}">Previous</a>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <a class="btn btn-info mb-4" href="?page={{num}}">{{num}}</a>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a class="btn btn-info mb-4" href="?page={{num}}">{{num}}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <a class="btn btn-outline-info mb-4" href="?page={{page_obj.next_page_number}}">Next</a>
+                    <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages}}">Last</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="alert alert-dismissible alert-danger">
+            No Posts has been added yet....
+        </div>
+    {% endif %}
+    </div>
+ {% endblock %}
