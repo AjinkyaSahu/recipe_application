@@ -27,7 +27,7 @@ SECRET_KEY = 'o+4w!l4gd4qr=cvk1$j4*f^1#@ke4ual22$i6%f90()gfs$3-y'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1','recipesformom.herokuapp.com']
 
 
 # Application definition
